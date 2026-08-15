@@ -20,9 +20,12 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,6 +54,7 @@ import com.engineerfred.zaabutv.ui.theme.Dimens
 import com.engineerfred.zaabutv.ui.theme.InterFamily
 import com.engineerfred.zaabutv.ui.theme.OutfitFamily
 import com.engineerfred.zaabutv.ui.theme.TextSecondary
+import com.engineerfred.zaabutv.ui.theme.VjBadgeColor
 import com.engineerfred.zaabutv.ui.theme.ZaabuGold
 import kotlinx.coroutines.delay
 
@@ -190,6 +194,33 @@ private fun FeaturedCarousel(
                         .padding(horizontal = Dimens.ScreenPaddingHorizontal)
                         .padding(bottom = 16.dp)
                 ) {
+                    // VJ Badge if available
+                    if (movie.vjName != null) {
+                        Row(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(Dimens.RadiusFull))
+                                .background(VjBadgeColor.copy(alpha = 0.25f))
+                                .padding(horizontal = 10.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Mic,
+                                contentDescription = null,
+                                tint = VjBadgeColor,
+                                modifier = Modifier.size(13.dp)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "${movie.vjName}",
+                                fontFamily = InterFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 11.sp,
+                                color = Color.White
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+
                     Text(
                         text = movie.title,
                         fontFamily = OutfitFamily,
@@ -251,12 +282,22 @@ private fun FeaturedCarousel(
                                 fontSize = 14.sp,
                                 color = Color.White
                             )
-                            Text(
-                                text = "⭐ ${String.format("%.1f", movie.rating)}",
-                                fontFamily = InterFamily,
-                                fontSize = 12.sp,
-                                color = ZaabuGold
-                            )
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Filled.Star,
+                                    contentDescription = null,
+                                    tint = ZaabuGold,
+                                    modifier = Modifier.size(13.dp)
+                                )
+                                Spacer(modifier = Modifier.width(2.dp))
+                                Text(
+                                    text = String.format("%.1f", movie.rating),
+                                    fontFamily = InterFamily,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 12.sp,
+                                    color = ZaabuGold
+                                )
+                            }
                         }
                     }
                 }
