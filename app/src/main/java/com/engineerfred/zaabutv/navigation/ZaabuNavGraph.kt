@@ -4,15 +4,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.engineerfred.zaabutv.data.datastore.UserPreferencesRepository
 import com.engineerfred.zaabutv.presentation.auth.forgotpassword.ForgotPasswordScreen
 import com.engineerfred.zaabutv.presentation.auth.login.LoginScreen
 import com.engineerfred.zaabutv.presentation.auth.register.RegisterScreen
@@ -30,14 +35,53 @@ import com.engineerfred.zaabutv.presentation.vj.VjDirectoryScreen
 import com.engineerfred.zaabutv.presentation.vj.VjProfileScreen
 import com.engineerfred.zaabutv.presentation.watchlist.WatchlistScreen
 import com.engineerfred.zaabutv.ui.theme.DarkBackground
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+data class NavInitialState(
+    val hasCompletedOnboarding: Boolean = false,
+    val isLoggedIn: Boolean = false
+)
+
+@HiltViewModel
+class NavGraphViewModel @Inject constructor(
+    val userPreferencesRepository: UserPreferencesRepository
+) : ViewModel() {
+    val initialState: StateFlow<NavInitialState> = combine(
+        userPreferencesRepository.hasCompletedOnboarding,
+        userPreferencesRepository.isLoggedIn
+    ) { completedOnboarding, loggedIn ->
+        NavInitialState(
+            hasCompletedOnboarding = completedOnboarding,
+            isLoggedIn = loggedIn
+        )
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = NavInitialState()
+    )
+
+    fun markOnboardingCompleted() {
+        viewModelScope.launch {
+            userPreferencesRepository.setCompletedOnboarding(true)
+        }
+    }
+}
 
 @Composable
 fun ZaabuNavGraph(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    viewModel: NavGraphViewModel = hiltViewModel()
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val navState by viewModel.initialState.collectAsState()
 
     // Determine current top-level screen for BottomNavBar
     val currentScreen: Screen = when {
@@ -45,7 +89,7 @@ fun ZaabuNavGraph(
         currentRoute?.contains("Search") == true -> Screen.Search
         currentRoute?.contains("VjDirectory") == true -> Screen.VjDirectory
         currentRoute?.contains("Watchlist") == true -> Screen.Watchlist
-        currentRoute?.contains("Profile") == true -> Screen.Profile
+        currentRoute?.contains("Profile") == true && !currentRoute.contains("VjProfile") -> Screen.Profile
         else -> Screen.Home
     }
 
@@ -65,7 +109,9 @@ fun ZaabuNavGraph(
                     currentScreen = currentScreen,
                     onNavigate = { destination ->
                         navController.navigate(destination) {
-                            popUpTo(Screen.Home) { saveState = true }
+                            popUpTo(Screen.Home) {
+                                saveState = true
+                            }
                             launchSingleTop = true
                             restoreState = true
                         }
@@ -83,7 +129,12 @@ fun ZaabuNavGraph(
             composable<Screen.Splash> {
                 SplashScreen(
                     onSplashFinished = {
-                        navController.navigate(Screen.Onboarding) {
+                        val targetScreen: Screen = when {
+                            !navState.hasCompletedOnboarding -> Screen.Onboarding
+                            !navState.isLoggedIn -> Screen.Login
+                            else -> Screen.Home
+                        }
+                        navController.navigate(targetScreen) {
                             popUpTo(Screen.Splash) { inclusive = true }
                         }
                     }
@@ -94,7 +145,8 @@ fun ZaabuNavGraph(
             composable<Screen.Onboarding> {
                 OnboardingScreen(
                     onGetStartedClick = {
-                        navController.navigate(Screen.Home) {
+                        viewModel.markOnboardingCompleted()
+                        navController.navigate(Screen.Login) {
                             popUpTo(Screen.Onboarding) { inclusive = true }
                         }
                     }
@@ -153,6 +205,7 @@ fun ZaabuNavGraph(
                 val route = backStackEntry.toRoute<Screen.MovieDetail>()
                 MovieDetailScreen(
                     onPlayClick = { movieId -> navController.navigate(Screen.Player(movieId)) },
+                    onRequireSubscription = { navController.navigate(Screen.Subscription) },
                     onMovieClick = { movieId -> navController.navigate(Screen.MovieDetail(movieId)) },
                     onVjClick = { vjId -> navController.navigate(Screen.VjProfile(vjId)) },
                     onBackClick = { navController.popBackStack() }

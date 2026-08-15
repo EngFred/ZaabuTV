@@ -1,5 +1,6 @@
 package com.engineerfred.zaabutv.data.repository
 
+import com.engineerfred.zaabutv.data.datastore.UserPreferencesRepository
 import com.engineerfred.zaabutv.data.mockdata.MockPlans
 import com.engineerfred.zaabutv.domain.model.PaymentMethod
 import com.engineerfred.zaabutv.domain.model.SubscriptionPlan
@@ -11,7 +12,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SubscriptionRepositoryImpl @Inject constructor() : SubscriptionRepository {
+class SubscriptionRepositoryImpl @Inject constructor(
+    private val userPreferencesRepository: UserPreferencesRepository
+) : SubscriptionRepository {
 
     override fun getPlans(): Flow<List<SubscriptionPlan>> = flow {
         delay(200)
@@ -26,6 +29,7 @@ class SubscriptionRepositoryImpl @Inject constructor() : SubscriptionRepository 
         // Simulate mobile money USSD prompt / network delay
         delay(1200)
         if (phoneNumber.length >= 9) {
+            userPreferencesRepository.setSubscriptionActive(planId)
             emit(Result.success(true))
         } else {
             emit(Result.failure(Exception("Invalid mobile money phone number.")))

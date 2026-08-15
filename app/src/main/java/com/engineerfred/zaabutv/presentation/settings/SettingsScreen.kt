@@ -1,5 +1,7 @@
 package com.engineerfred.zaabutv.presentation.settings
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -9,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -25,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,6 +47,7 @@ fun SettingsScreen(
 ) {
     var cellularDownloads by remember { mutableStateOf(false) }
     var highQualityAudio by remember { mutableStateOf(true) }
+    val context = LocalContext.current
 
     Column(
         modifier = modifier
@@ -90,7 +93,7 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "AUDIO & LANGUAGE",
+                text = "SUPPORT & CONTACT",
                 fontFamily = OutfitFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = 12.sp,
@@ -99,8 +102,54 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             SettingTextTile(
-                title = "Default VJ Audio Language",
-                value = "Luganda (Luganda Translation)"
+                title = "💬 WhatsApp Support",
+                value = "+256 754 348 118",
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/256754348118"))
+                    context.startActivity(intent)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "LEGAL & POLICIES",
+                fontFamily = OutfitFamily,
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp,
+                color = TextSecondary
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            SettingTextTile(
+                title = "🏠 Legal Hub",
+                value = "https://zaabutv-legal-ph0k4r1k.agent.mira.tg",
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://zaabutv-legal-ph0k4r1k.agent.mira.tg"))
+                    context.startActivity(intent)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            SettingTextTile(
+                title = "📄 Terms of Service",
+                value = "https://zaabutv-legal-ph0k4r1k.agent.mira.tg/terms.html",
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://zaabutv-legal-ph0k4r1k.agent.mira.tg/terms.html"))
+                    context.startActivity(intent)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            SettingTextTile(
+                title = "🔒 Privacy Policy",
+                value = "https://zaabutv-legal-ph0k4r1k.agent.mira.tg/privacy.html",
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://zaabutv-legal-ph0k4r1k.agent.mira.tg/privacy.html"))
+                    context.startActivity(intent)
+                }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -117,6 +166,8 @@ fun SettingsScreen(
             SettingTextTile(title = "App Version", value = "v1.0.0-pitch-demo")
             Spacer(modifier = Modifier.height(8.dp))
             SettingTextTile(title = "Platform Concept", value = "Nollywood & Local Films with VJ Translation")
+
+            Spacer(modifier = Modifier.height(36.dp))
         }
     }
 }
@@ -156,13 +207,15 @@ private fun SettingSwitchTile(
 @Composable
 private fun SettingTextTile(
     title: String,
-    value: String
+    value: String,
+    onClick: (() -> Unit)? = null
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(Dimens.RadiusMd))
             .background(DarkCard)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

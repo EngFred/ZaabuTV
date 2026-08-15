@@ -64,6 +64,7 @@ import com.engineerfred.zaabutv.ui.theme.ZaabuGold
 @Composable
 fun MovieDetailScreen(
     onPlayClick: (String) -> Unit,
+    onRequireSubscription: () -> Unit,
     onMovieClick: (String) -> Unit,
     onVjClick: (String) -> Unit,
     onBackClick: () -> Unit,
@@ -127,7 +128,13 @@ fun MovieDetailScreen(
                     .clip(CircleShape)
                     .background(ZaabuGold.copy(alpha = 0.9f))
                     .align(Alignment.Center)
-                    .clickable { onPlayClick(movie.id) },
+                    .clickable {
+                        if (state.isSubscribed) {
+                            onPlayClick(movie.id)
+                        } else {
+                            onRequireSubscription()
+                        }
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -263,7 +270,13 @@ fun MovieDetailScreen(
             ) {
                 GoldButton(
                     text = "Play Movie",
-                    onClick = { onPlayClick(movie.id) },
+                    onClick = {
+                        if (state.isSubscribed) {
+                            onPlayClick(movie.id)
+                        } else {
+                            onRequireSubscription()
+                        }
+                    },
                     icon = Icons.Filled.PlayArrow,
                     modifier = Modifier.weight(1f)
                 )

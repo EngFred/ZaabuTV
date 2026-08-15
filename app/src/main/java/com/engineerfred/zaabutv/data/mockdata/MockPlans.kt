@@ -8,7 +8,7 @@ object MockPlans {
         SubscriptionPlan(
             id = "plan_weekly",
             name = "Weekly Access",
-            priceUgx = 5000,
+            priceUgx = 8000,
             periodLabel = "per week",
             features = listOf(
                 "7 days unlimited streaming",
@@ -22,7 +22,7 @@ object MockPlans {
         SubscriptionPlan(
             id = "plan_monthly",
             name = "Monthly Pass",
-            priceUgx = 15000,
+            priceUgx = 35000,
             periodLabel = "per month",
             features = listOf(
                 "30 days unlimited streaming",
@@ -35,17 +35,31 @@ object MockPlans {
             isPopular = true
         ),
         SubscriptionPlan(
+            id = "plan_quarterly",
+            name = "3-Month Pass",
+            priceUgx = 90000,
+            periodLabel = "per 3 months",
+            features = listOf(
+                "90 days unlimited streaming",
+                "Save UGX 15,000 vs monthly",
+                "Full HD 1080p Quality",
+                "Stream on 3 devices simultaneously",
+                "Unlimited offline downloads"
+            ),
+            isPopular = false
+        ),
+        SubscriptionPlan(
             id = "plan_yearly",
-            name = "VIP Annual Pass",
-            priceUgx = 150000,
+            name = "1-Year Pass",
+            priceUgx = 320000,
             periodLabel = "per year",
             features = listOf(
                 "365 days unlimited VIP access",
                 "Ultra HD 4K Quality",
-                "Early access to new VJ uploads",
+                "Early access to new VJ releases",
                 "Stream on 4 devices simultaneously",
                 "Unlimited offline downloads",
-                "Exclusive VJ meet & greet events"
+                "Save over UGX 100,000 annually"
             ),
             isPopular = false
         )
@@ -53,10 +67,10 @@ object MockPlans {
 
     val defaultUser = User(
         id = "user_demo",
-        name = "Engineer Fred",
-        email = "fred@zaabutv.com",
-        avatarUrl = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
-        isSubscribed = true,
-        activePlanName = "Monthly Pass"
+        name = "New Member",
+        email = "member@zaabutv.ug",
+        avatarUrl = null,
+        isSubscribed = false,
+        activePlanName = null
     )
 }

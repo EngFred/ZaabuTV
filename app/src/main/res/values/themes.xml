@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.ZaabuTV" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!-- Android 12+ Native SplashScreen Theme -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#0A0A0F</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.ZaabuTV</item>
+    </style>
+
 </resources>

@@ -10,6 +10,8 @@ lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2025.02.00"
 startup = "1.2.0"
+splashscreen = "1.0.1"
+datastore = "1.1.2"
 hilt = "2.60.1"
 hiltNavigationCompose = "1.4.0"
 navigationCompose = "2.9.8"
@@ -18,6 +20,8 @@ lifecycleViewModelCompose = "2.9.1"
 kotlinxSerializationJson = "1.8.1"
 
 [libraries]
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 androidx-startup = { group = "androidx.startup", name = "startup-runtime", version.ref = "startup" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

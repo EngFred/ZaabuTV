@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Cast
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -120,6 +121,16 @@ fun ZaabuTopBar(
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
+            val context = androidx.compose.ui.platform.LocalContext.current
+            IconButton(onClick = {
+                android.widget.Toast.makeText(context, "Casting to your Smart TV...", android.widget.Toast.LENGTH_SHORT).show()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Cast,
+                    contentDescription = "Cast to TV",
+                    tint = Color.White
+                )
+            }
             if (onSearchClick != null) {
                 IconButton(onClick = onSearchClick) {
                     Icon(

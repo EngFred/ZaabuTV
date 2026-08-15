@@ -3,6 +3,7 @@ package com.engineerfred.zaabutv.presentation.moviedetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.engineerfred.zaabutv.data.datastore.UserPreferencesRepository
 import com.engineerfred.zaabutv.domain.model.Actor
 import com.engineerfred.zaabutv.domain.model.Movie
 import com.engineerfred.zaabutv.domain.model.Vj
@@ -23,6 +24,7 @@ data class MovieDetailUiState(
     val cast: List<Actor> = emptyList(),
     val similarMovies: List<Movie> = emptyList(),
     val isInWatchlist: Boolean = false,
+    val isSubscribed: Boolean = false,
     val isLoading: Boolean = true,
     val error: String? = null
 )
@@ -31,7 +33,8 @@ data class MovieDetailUiState(
 class MovieDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getMovieDetailUseCase: GetMovieDetailUseCase,
-    private val toggleWatchlistUseCase: ToggleWatchlistUseCase
+    private val toggleWatchlistUseCase: ToggleWatchlistUseCase,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
     private val movieId: String = savedStateHandle["movieId"] ?: ""
@@ -40,7 +43,16 @@ class MovieDetailViewModel @Inject constructor(
     val uiState: StateFlow<MovieDetailUiState> = _uiState.asStateFlow()
 
     init {
+        observeSubscription()
         loadMovieDetail()
+    }
+
+    private fun observeSubscription() {
+        viewModelScope.launch {
+            userPreferencesRepository.isSubscribed.collect { subscribed ->
+                _uiState.update { it.copy(isSubscribed = subscribed) }
+            }
+        }
     }
 
     private fun loadMovieDetail() {

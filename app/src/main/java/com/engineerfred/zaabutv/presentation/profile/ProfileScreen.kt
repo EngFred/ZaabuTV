@@ -1,5 +1,7 @@
 package com.engineerfred.zaabutv.presentation.profile
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +24,9 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
@@ -36,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +53,7 @@ import com.engineerfred.zaabutv.ui.theme.Dimens
 import com.engineerfred.zaabutv.ui.theme.ErrorRed
 import com.engineerfred.zaabutv.ui.theme.InterFamily
 import com.engineerfred.zaabutv.ui.theme.OutfitFamily
+import com.engineerfred.zaabutv.ui.theme.SuccessGreen
 import com.engineerfred.zaabutv.ui.theme.TextSecondary
 import com.engineerfred.zaabutv.ui.theme.ZaabuGold
 
@@ -61,6 +67,7 @@ fun ProfileScreen(
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(state.isLoggedOut) {
         if (state.isLoggedOut) {
@@ -110,7 +117,7 @@ fun ProfileScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = user?.name ?: "Fred Kabwama",
+                text = user?.name ?: "Guest User",
                 fontFamily = OutfitFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = 22.sp,
@@ -118,7 +125,7 @@ fun ProfileScreen(
             )
 
             Text(
-                text = user?.email ?: "engineerfred@zaabutv.ug",
+                text = user?.email ?: "Sign in to activate full features",
                 fontFamily = InterFamily,
                 fontSize = 13.sp,
                 color = TextSecondary
@@ -126,11 +133,16 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Active Subscription Badge
+            // Subscription Pass Badge
+            val isSubscribed = user?.isSubscribed == true
+            val badgeText = if (isSubscribed) "${user?.activePlanName ?: "VIP Pass"} Active" else "No Active Pass — Tap to Subscribe"
+            val badgeBg = if (isSubscribed) SuccessGreen.copy(alpha = 0.15f) else ErrorRed.copy(alpha = 0.15f)
+            val badgeTextColor = if (isSubscribed) SuccessGreen else ErrorRed
+
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(Dimens.RadiusFull))
-                    .background(ZaabuGold.copy(alpha = 0.15f))
+                    .background(badgeBg)
                     .clickable(onClick = onNavigateToSubscription)
                     .padding(horizontal = 14.dp, vertical = 6.dp)
             ) {
@@ -138,16 +150,16 @@ fun ProfileScreen(
                     Icon(
                         Icons.Filled.Star,
                         contentDescription = null,
-                        tint = ZaabuGold,
+                        tint = badgeTextColor,
                         modifier = Modifier.size(14.dp)
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "VIP Monthly Pass Active",
+                        text = badgeText,
                         fontFamily = OutfitFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
-                        color = ZaabuGold
+                        color = badgeTextColor
                     )
                 }
             }
@@ -168,14 +180,26 @@ fun ProfileScreen(
             ProfileMenuItem(
                 icon = Icons.Filled.Star,
                 title = "Subscription Plans",
-                subtitle = "Manage or upgrade your pass",
+                subtitle = if (user?.isSubscribed == true) "Pass active" else "Subscribe via Mobile Money",
                 onClick = onNavigateToSubscription
             )
             ProfileMenuItem(
-                icon = Icons.Filled.Download,
-                title = "Downloads & Offline Watching",
-                subtitle = "3 movies saved offline",
-                onClick = { }
+                icon = Icons.Filled.Phone,
+                title = "Contact Support (WhatsApp)",
+                subtitle = "+256 754 348 118",
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/256754348118"))
+                    context.startActivity(intent)
+                }
+            )
+            ProfileMenuItem(
+                icon = Icons.Filled.Gavel,
+                title = "Legal Hub & Privacy",
+                subtitle = "Terms, Privacy & Licensing",
+                onClick = {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://zaabutv-legal-ph0k4r1k.agent.mira.tg"))
+                    context.startActivity(intent)
+                }
             )
             ProfileMenuItem(
                 icon = Icons.Filled.Settings,
