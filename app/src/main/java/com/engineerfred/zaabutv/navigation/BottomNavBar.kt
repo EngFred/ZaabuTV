@@ -1,7 +1,10 @@
 package com.engineerfred.zaabutv.navigation
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Home
@@ -21,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.engineerfred.zaabutv.ui.theme.DarkSurface
+import com.engineerfred.zaabutv.ui.theme.DarkSurfaceVariant
 import com.engineerfred.zaabutv.ui.theme.Dimens
 import com.engineerfred.zaabutv.ui.theme.InterFamily
 import com.engineerfred.zaabutv.ui.theme.TextSecondary
@@ -46,39 +50,53 @@ fun BottomNavBar(
     onNavigate: (Screen) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    NavigationBar(
+    Box(
         modifier = modifier
-            .height(Dimens.BottomNavHeight)
-            .background(DarkSurface),
-        containerColor = DarkSurface,
-        contentColor = Color.White
+            .fillMaxWidth()
+            .background(DarkSurface)
     ) {
-        bottomNavItems.forEach { item ->
-            val isSelected = currentScreen::class == item.screen::class
+        // Subtle top border divider for clean visual separation
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(0.5.dp)
+                .background(DarkSurfaceVariant)
+        )
 
-            NavigationBarItem(
-                selected = isSelected,
-                onClick = { onNavigate(item.screen) },
-                icon = {
-                    Icon(
-                        imageVector = item.icon,
-                        contentDescription = item.title,
-                        tint = if (isSelected) ZaabuGold else TextSecondary
+        NavigationBar(
+            modifier = Modifier
+                .height(Dimens.BottomNavHeight)
+                .padding(top = 4.dp),
+            containerColor = DarkSurface,
+            contentColor = Color.White
+        ) {
+            bottomNavItems.forEach { item ->
+                val isSelected = currentScreen::class == item.screen::class
+
+                NavigationBarItem(
+                    selected = isSelected,
+                    onClick = { onNavigate(item.screen) },
+                    icon = {
+                        Icon(
+                            imageVector = item.icon,
+                            contentDescription = item.title,
+                            tint = if (isSelected) ZaabuGold else TextSecondary
+                        )
+                    },
+                    label = {
+                        Text(
+                            text = item.title,
+                            fontFamily = InterFamily,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                            fontSize = 11.sp,
+                            color = if (isSelected) ZaabuGold else TextSecondary
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        indicatorColor = DarkSurface
                     )
-                },
-                label = {
-                    Text(
-                        text = item.title,
-                        fontFamily = InterFamily,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        fontSize = 11.sp,
-                        color = if (isSelected) ZaabuGold else TextSecondary
-                    )
-                },
-                colors = NavigationBarItemDefaults.colors(
-                    indicatorColor = DarkSurface
                 )
-            )
+            }
         }
     }
 }

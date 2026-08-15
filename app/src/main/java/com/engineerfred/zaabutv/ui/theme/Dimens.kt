@@ -49,7 +49,7 @@ object Dimens {
     val VjCardWidth = 120.dp
 
     // ─── Bottom Navigation ──────────────────────────────────────────
-    val BottomNavHeight = 64.dp
+    val BottomNavHeight = 80.dp
 
     // ─── Icon Sizes ─────────────────────────────────────────────────
     val IconSizeSm = 16.dp
