@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -47,7 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.engineerfred.zaabutv.ui.theme.DarkBackground
+import com.engineerfred.zaabutv.data.mockdata.MockMovies
 import com.engineerfred.zaabutv.ui.theme.InterFamily
 import com.engineerfred.zaabutv.ui.theme.OutfitFamily
 import com.engineerfred.zaabutv.ui.theme.TextSecondary
@@ -61,9 +60,14 @@ fun PlayerScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val movie = remember(movieId) { MockMovies.getById(movieId) }
     var isPlaying by remember { mutableStateOf(true) }
     var progress by remember { mutableFloatStateOf(0f) }
     var showControls by remember { mutableStateOf(true) }
+
+    val movieTitle = movie?.title ?: "Movie Streaming"
+    val vjName = movie?.vjName
+    val backdropUrl = movie?.backdropUrl ?: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1200"
 
     // Simulated playback progress
     LaunchedEffect(isPlaying) {
@@ -87,10 +91,10 @@ fun PlayerScreen(
             .background(Color.Black)
             .clickable { showControls = !showControls }
     ) {
-        // Mock video frame — using a backdrop as placeholder
+        // Mock video frame: movie backdrop
         AsyncImage(
-            model = "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1200",
-            contentDescription = "Movie frame",
+            model = backdropUrl,
+            contentDescription = movieTitle,
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
@@ -127,7 +131,7 @@ fun PlayerScreen(
                         color = TextSecondary
                     )
                     Text(
-                        text = "Movie Demo",
+                        text = movieTitle,
                         fontFamily = OutfitFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
@@ -189,11 +193,11 @@ fun PlayerScreen(
                     )
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                // VJ Attribution
+                // VJ Attribution Badge
                 Row(
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
-                        .background(VjBadgeColor.copy(alpha = 0.3f))
+                        .background(VjBadgeColor.copy(alpha = 0.35f))
                         .padding(horizontal = 10.dp, vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -201,14 +205,15 @@ fun PlayerScreen(
                         imageVector = Icons.Filled.Mic,
                         contentDescription = null,
                         tint = VjBadgeColor,
-                        modifier = Modifier.size(14.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "VJ Translation Active",
+                        text = if (vjName != null) "$vjName" else "Original Luganda Audio",
                         fontFamily = InterFamily,
                         fontSize = 11.sp,
-                        color = Color.White
+                        color = Color.White,
+                        fontWeight = FontWeight.SemiBold
                     )
                 }
 
@@ -232,9 +237,14 @@ fun PlayerScreen(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val elapsed = (progress * 120).toInt()
+                    val totalMins = movie?.durationMinutes ?: 120
+                    val elapsed = (progress * totalMins).toInt()
+                    val totalHrs = totalMins / 60
+                    val totalRemMins = totalMins % 60
+                    val formattedTotal = if (totalHrs > 0) "${totalHrs}:${String.format("%02d", totalRemMins)}:00" else "${totalMins}:00"
+
                     Text(
-                        text = "${elapsed / 60}:${String.format("%02d", elapsed % 60)} / 2:00:00",
+                        text = "${elapsed / 60}:${String.format("%02d", elapsed % 60)} / $formattedTotal",
                         fontFamily = InterFamily,
                         fontSize = 12.sp,
                         color = TextSecondary

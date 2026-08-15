@@ -2,8 +2,11 @@ package com.engineerfred.zaabutv.presentation.splash
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,9 +20,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -35,19 +38,30 @@ fun SplashScreen(
     onSplashFinished: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val scale = remember { Animatable(0.5f) }
-    val alpha = remember { Animatable(0f) }
+    // Start fully visible (alpha = 1f) to eliminate any blank gap after native splash!
+    val logoScale = remember { Animatable(0.85f) }
+    val ringScale = remember { Animatable(0.80f) }
+    val ringAlpha = remember { Animatable(0.6f) }
 
     LaunchedEffect(key1 = true) {
-        scale.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
+        // Smooth spring pop for logo
+        logoScale.animateTo(
+            targetValue = 1.0f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
         )
-        alpha.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 600)
+        // Expanding aura ring
+        ringScale.animateTo(
+            targetValue = 1.35f,
+            animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
         )
-        delay(1200)
+        ringAlpha.animateTo(
+            targetValue = 0.0f,
+            animationSpec = tween(durationMillis = 800)
+        )
+        delay(1100)
         onSplashFinished()
     }
 
@@ -57,36 +71,63 @@ fun SplashScreen(
             .background(DarkBackground),
         contentAlignment = Alignment.Center
     ) {
+        // Radial Background Glow
+        Box(
+            modifier = Modifier
+                .size(240.dp)
+                .background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            ZaabuGold.copy(alpha = 0.15f),
+                            Color.Transparent
+                        )
+                    )
+                )
+        )
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .scale(scale.value)
-                .alpha(alpha.value)
+            modifier = Modifier.scale(logoScale.value)
         ) {
-            // Gold Logo Badge
-            Box(
-                modifier = Modifier
-                    .size(90.dp)
-                    .clip(CircleShape)
-                    .background(ZaabuGold),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Z",
-                    fontFamily = OutfitFamily,
-                    fontWeight = FontWeight.ExtraBold,
-                    fontSize = 54.sp,
-                    color = Color.Black
+            Box(contentAlignment = Alignment.Center) {
+                // Expanding Aura Ring
+                Box(
+                    modifier = Modifier
+                        .size(90.dp)
+                        .scale(ringScale.value)
+                        .clip(CircleShape)
+                        .border(width = 2.dp, color = ZaabuGold.copy(alpha = ringAlpha.value), shape = CircleShape)
                 )
+
+                // Main Gold Logo Badge (Instant render from frame 0)
+                Box(
+                    modifier = Modifier
+                        .size(90.dp)
+                        .clip(CircleShape)
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(ZaabuGold, Color(0xFFFF9100))
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Z",
+                        fontFamily = OutfitFamily,
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 54.sp,
+                        color = Color.Black
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Text(
                 text = "ZAABU TV",
                 fontFamily = OutfitFamily,
                 fontWeight = FontWeight.ExtraBold,
-                fontSize = 36.sp,
+                fontSize = 38.sp,
                 color = ZaabuGold,
                 letterSpacing = (-1).sp
             )

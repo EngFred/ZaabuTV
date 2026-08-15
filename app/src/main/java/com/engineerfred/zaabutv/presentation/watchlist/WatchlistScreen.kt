@@ -40,7 +40,7 @@ fun WatchlistScreen(
             .fillMaxSize()
             .background(DarkBackground)
     ) {
-        ZaabuTopBar(title = "📌 My Watchlist")
+        ZaabuTopBar(title = "My Watchlist")
 
         Spacer(modifier = Modifier.height(12.dp))
 

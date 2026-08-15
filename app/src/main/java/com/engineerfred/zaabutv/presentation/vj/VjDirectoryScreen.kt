@@ -64,13 +64,13 @@ fun VjDirectoryScreen(
             .fillMaxSize()
             .background(DarkBackground)
     ) {
-        ZaabuTopBar(title = "🎤 VJ Directory")
+        ZaabuTopBar(title = "VJ Directory")
 
         Spacer(modifier = Modifier.height(8.dp))
 
         // Subtitle
         Text(
-            text = "Uganda's best Video Jockeys — the voices behind your favourite movies",
+            text = "Uganda's best Video Jockeys | The voices behind your favourite movies",
             fontFamily = InterFamily,
             fontSize = 13.sp,
             color = TextSecondary,

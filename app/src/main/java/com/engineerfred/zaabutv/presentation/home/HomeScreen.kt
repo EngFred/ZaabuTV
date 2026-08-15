@@ -93,35 +93,35 @@ fun HomeScreen(
 
         // New Uploads
         MovieSection(
-            title = "🆕 New Uploads",
+            title = "New Uploads",
             movies = state.newUploads,
             onMovieClick = onMovieClick
         )
 
         // Nollywood VJ-Translated
         MovieSection(
-            title = "🇳🇬 Nollywood · VJ Translated",
+            title = "Nollywood | VJ Translated",
             movies = state.nollywoodFilms,
             onMovieClick = onMovieClick
         )
 
         // Ghanaian VJ-Translated
         MovieSection(
-            title = "🇬🇭 Ghanaian · VJ Translated",
+            title = "Ghanaian | VJ Translated",
             movies = state.ghanianFilms,
             onMovieClick = onMovieClick
         )
 
         // Uganda Originals
         MovieSection(
-            title = "🇺🇬 Uganda Originals",
+            title = "Uganda Originals",
             movies = state.ugandanFilms,
             onMovieClick = onMovieClick
         )
 
         // Classics
         MovieSection(
-            title = "🎬 Classics",
+            title = "Classics",
             movies = state.classics,
             onMovieClick = onMovieClick
         )

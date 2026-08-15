@@ -120,9 +120,9 @@ fun MovieCard(
         )
 
         // VJ Translation Badge or Genre subtitle
-        val subtitleText = vjName ?: movie.genres.firstOrNull() ?: movie.country.displayName
+        val subtitleText = movie.vjName ?: movie.genres.firstOrNull() ?: movie.country.displayName
         Text(
-            text = if (vjName != null) "VJ: $vjName" else subtitleText,
+            text = if (movie.vjName != null) "${movie.vjName}" else subtitleText,
             fontFamily = InterFamily,
             fontWeight = FontWeight.Medium,
             fontSize = 11.sp,

@@ -12,6 +12,7 @@ data class Movie(
     val country: Country,
     val categories: List<Category>,
     val vjId: String? = null, // null for native Luganda Ugandan movies
+    val vjName: String? = null, // resolved VJ name for display
     val castIds: List<String> = emptyList(),
     val rating: Float = 4.5f,
     val isFeatured: Boolean = false

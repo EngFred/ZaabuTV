@@ -48,18 +48,18 @@ data class OnboardingSlide(
 val onboardingSlides = listOf(
     OnboardingSlide(
         title = "Nollywood & Ghanaian Blockbusters",
-        description = "Stream the best West African cinema — high drama, action, romance, and comedy all in one place.",
+        description = "Stream the best West African cinema with high drama, action, romance, and comedy all in one place.",
         imageUrl = "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&q=80&w=800"
     ),
     OnboardingSlide(
         title = "Translated by Uganda's Best VJs",
-        description = "Experience movies narrated in rich Luganda by legend VJs — VJ Junior, VJ Ice P, VJ Emmy, VJ Jingo, VJ Kevo & more!",
+        description = "Experience movies narrated in rich Luganda by legend VJs including VJ SMK, VJ Jovan, VJ Kiwa, VJ Jingo, VJ Kevo and more!",
         imageUrl = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&q=80&w=800"
     ),
     OnboardingSlide(
         title = "Original Ugandan Local Films",
         description = "Discover authentic home-grown Ugandan cinema straight from Kampala, Entebbe, and Wakaliwood.",
-        imageUrl = "https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=800"
+        imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ02gbuqt_NSXNWdt_D8_COX3g8MRpilrZ8m-V9kGxscpI2Rc3auVJk5Fc&s=10"
     )
 )
 

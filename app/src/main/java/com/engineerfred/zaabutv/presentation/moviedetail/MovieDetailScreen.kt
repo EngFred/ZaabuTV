@@ -235,28 +235,22 @@ fun MovieDetailScreen(
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
+
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 Icons.Filled.Mic,
                                 contentDescription = null,
-                                tint = VjBadgeColor,
-                                modifier = Modifier.size(14.dp)
+                                modifier = Modifier.size(24.dp)
                             )
-                            Spacer(modifier = Modifier.width(4.dp))
+                            Spacer(Modifier.size(5.dp))
                             Text(
-                                text = "VJ Translation",
-                                fontFamily = InterFamily,
-                                fontSize = 11.sp,
-                                color = VjBadgeColor
+                                text = state.vj!!.name,
+                                fontFamily = OutfitFamily,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp,
+                                color = Color.White
                             )
                         }
-                        Text(
-                            text = state.vj!!.name,
-                            fontFamily = OutfitFamily,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
-                            color = Color.White
-                        )
                     }
                 }
 

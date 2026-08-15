@@ -135,7 +135,7 @@ fun ProfileScreen(
 
             // Subscription Pass Badge
             val isSubscribed = user?.isSubscribed == true
-            val badgeText = if (isSubscribed) "${user?.activePlanName ?: "VIP Pass"} Active" else "No Active Pass — Tap to Subscribe"
+            val badgeText = if (isSubscribed) "${user?.activePlanName ?: "VIP Pass"} Active" else "No Active Pass | Tap to Subscribe"
             val badgeBg = if (isSubscribed) SuccessGreen.copy(alpha = 0.15f) else ErrorRed.copy(alpha = 0.15f)
             val badgeTextColor = if (isSubscribed) SuccessGreen else ErrorRed
 
@@ -186,7 +186,6 @@ fun ProfileScreen(
             ProfileMenuItem(
                 icon = Icons.Filled.Phone,
                 title = "Contact Support (WhatsApp)",
-                subtitle = "+256 754 348 118",
                 onClick = {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/256754348118"))
                     context.startActivity(intent)

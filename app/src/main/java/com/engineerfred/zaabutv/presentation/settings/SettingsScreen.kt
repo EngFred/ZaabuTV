@@ -11,9 +11,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Chat
+import androidx.compose.material.icons.filled.Description
+import androidx.compose.material.icons.filled.Gavel
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -26,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -101,9 +112,10 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            SettingTextTile(
-                title = "💬 WhatsApp Support",
-                value = "+256 754 348 118",
+            SettingIconTextTile(
+                icon = Icons.Filled.Chat,
+                title = "WhatsApp Support",
+                value = "Reach customer care via WhatsApp",
                 onClick = {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/256754348118"))
                     context.startActivity(intent)
@@ -121,8 +133,9 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            SettingTextTile(
-                title = "🏠 Legal Hub",
+            SettingIconTextTile(
+                icon = Icons.Filled.Gavel,
+                title = "Legal Hub",
                 value = "https://zaabutv-legal-ph0k4r1k.agent.mira.tg",
                 onClick = {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://zaabutv-legal-ph0k4r1k.agent.mira.tg"))
@@ -132,8 +145,9 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            SettingTextTile(
-                title = "📄 Terms of Service",
+            SettingIconTextTile(
+                icon = Icons.Filled.Description,
+                title = "Terms of Service",
                 value = "https://zaabutv-legal-ph0k4r1k.agent.mira.tg/terms.html",
                 onClick = {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://zaabutv-legal-ph0k4r1k.agent.mira.tg/terms.html"))
@@ -143,8 +157,9 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            SettingTextTile(
-                title = "🔒 Privacy Policy",
+            SettingIconTextTile(
+                icon = Icons.Filled.Lock,
+                title = "Privacy Policy",
                 value = "https://zaabutv-legal-ph0k4r1k.agent.mira.tg/privacy.html",
                 onClick = {
                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://zaabutv-legal-ph0k4r1k.agent.mira.tg/privacy.html"))
@@ -163,9 +178,17 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
 
-            SettingTextTile(title = "App Version", value = "v1.0.0-pitch-demo")
+            SettingIconTextTile(
+                icon = Icons.Filled.Info,
+                title = "App Version",
+                value = "v1.0.0-pitch-demo"
+            )
             Spacer(modifier = Modifier.height(8.dp))
-            SettingTextTile(title = "Platform Concept", value = "Nollywood & Local Films with VJ Translation")
+            SettingIconTextTile(
+                icon = Icons.Filled.Info,
+                title = "Platform Concept",
+                value = "Nollywood & Local Films with VJ Translation"
+            )
 
             Spacer(modifier = Modifier.height(36.dp))
         }
@@ -205,7 +228,8 @@ private fun SettingSwitchTile(
 }
 
 @Composable
-private fun SettingTextTile(
+private fun SettingIconTextTile(
+    icon: ImageVector,
     title: String,
     value: String,
     onClick: (() -> Unit)? = null
@@ -219,6 +243,13 @@ private fun SettingTextTile(
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = ZaabuGold,
+            modifier = Modifier.size(20.dp)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(text = title, fontFamily = OutfitFamily, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = Color.White)
             Text(text = value, fontFamily = InterFamily, fontSize = 12.sp, color = ZaabuGold)
